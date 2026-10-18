@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cómo se forman los grupos</title>
+<style>
+:root{--bg:#f6f8f9;--card:#fff;--ink:#1d2b33;--mute:#5b6b75;--line:#cfd8de;--b3:#6a4fb3;--b5:#0f7b7b;--b8:#c2410c;--b10:#a16207;--b60:#1d4ed8;--acc:var(--b5);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12191d;--card:#1a2328;--ink:#e6edf1;--mute:#9fb0ba;--line:#34444d;--b3:#a995ec;--b5:#4fc3c3;--b8:#ff9a63;--b10:#e3b341;--b60:#7aa2ff}}
+:root[data-theme="dark"]{--bg:#12191d;--card:#1a2328;--ink:#e6edf1;--mute:#9fb0ba;--line:#34444d;--b3:#a995ec;--b5:#4fc3c3;--b8:#ff9a63;--b10:#e3b341;--b60:#7aa2ff}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Trebuchet MS",Verdana,system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.2}
+h1{font-size:2rem;margin:.2em 0 .3em}h2{font-size:1.4rem;margin:2em 0 .4em;padding-top:.6em;border-top:2px solid var(--line)}
+h3{font-size:1rem;margin:0 0 6px;color:var(--mute);font-family:inherit}
+.kick{color:var(--mute);margin:0}
+.bases{display:flex;gap:8px;margin:14px 0}
+.bases button{flex:1;font:inherit;font-weight:700;padding:12px 4px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;cursor:pointer}
+.bases button[aria-pressed="true"]{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.board{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:10px}
+@media (max-width:620px){.board{grid-template-columns:1fr}}
+.leg{font-size:.9rem;color:var(--mute);margin:8px 0 0}
+.zone{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:10px 12px;min-height:130px}
+.zone.full{border-color:var(--acc)}
+.cen{display:inline-block;margin:0 6px 4px 0;font-size:3.4rem;line-height:1.1;animation:pop .5s}
+@keyframes pop{from{transform:scale(1.2)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){.cen{animation:none}}
+.tray{display:flex;flex-wrap:wrap;gap:8px}
+.slot{width:40px;height:40px;border:2px dashed var(--mute);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.15rem}
+.slot.bxs{width:58px;height:58px;border-radius:12px;font-size:2rem}
+.slot.on{border-style:solid;border-color:var(--acc)}
+.num{text-align:center;margin:14px 0 4px}
+.num b{font-size:3.2rem;font-family:Georgia,serif;color:var(--acc)}
+.num sub{font-size:.4em}
+.msg{text-align:center;min-height:3.2em;margin:0 0 10px;font-size:1.05rem}
+.msg sub{font-size:.65em}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:4px 0 6px;border-bottom:1px solid var(--line);margin-bottom:10px;text-align:center}
+.top .num{margin:0}.top .num b{font-size:2.4rem}.top .msg{min-height:2.7em;margin:0;font-size:1rem}
+.zone{display:flex;flex-direction:column}.zbody{flex:1}
+.zb{display:flex;gap:6px;margin-top:10px}
+.zb button{flex:1;font:inherit;font-weight:700;padding:10px 4px;min-height:48px;border-radius:8px;border:2px solid var(--acc);background:var(--card);color:var(--ink);cursor:pointer}
+.zb button.pl{background:var(--acc);color:#fff;flex:1.4}
+@media (prefers-color-scheme:dark){.zb button.pl{color:#10181c}}
+.zb button:disabled{opacity:.4;cursor:default}
+.rsb{font:inherit;font-weight:700;padding:10px 16px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.acts button{flex:1;min-width:140px;font:inherit;font-weight:700;padding:14px 10px;border-radius:8px;border:2px solid var(--acc);background:var(--card);color:var(--ink);cursor:pointer}
+.acts #add{background:var(--acc);color:#fff}
+@media (prefers-color-scheme:dark){.acts #add{color:#10181c}}
+.acts button:disabled{opacity:.45;cursor:default}
+.sheet{background:#fff;color:#000;border:1px solid var(--line);border-radius:6px;padding:18px;margin:14px 0}
+.sheet h3{color:#000;font-size:1.3rem;font-family:Georgia,serif;margin:0 0 8px}
+.mat{display:grid;grid-template-columns:1fr 1fr 1fr;border:3px solid #000;margin:10px 0}
+@media (max-width:560px){.mat{grid-template-columns:1fr}.mat>div+div{border-left:0!important;border-top:3px solid #000}}
+.mat>div{padding:10px 12px;min-height:190px}.mat>div+div{border-left:3px solid #000}
+.mat h4{margin:0 0 4px;font:700 1.05rem Georgia,serif;text-align:center}.mat p{margin:0 0 8px;font-size:.8rem;text-align:center}
+.rs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.ring{display:inline-block;width:34px;height:34px;border:2px solid #000;border-radius:50%}
+.ring.f{background:#000}.ring.s{width:20px;height:20px}
+.mine{display:flex;align-items:flex-end;gap:8px;margin:12px 0;flex-wrap:wrap}
+.mine i{display:inline-block;width:64px;height:56px;border:3px solid #000;border-radius:6px}
+.mine small{display:block;text-align:center;font-size:.75rem}
+.exm{border:2px dashed #000;border-radius:8px;padding:8px 12px;margin:10px 0}
+.exm .rs{justify-content:flex-start;margin:4px 0}
+.steps li{margin:8px 0}
+sub{font-size:.65em}
+.zb{flex-wrap:wrap}.zb button[hidden]{display:none}.zb button.x10{flex-basis:100%;min-height:40px;font-size:.95rem}
+.tray.t60{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;max-width:260px;align-content:start}
+.t60 .slot,.t60 .slot.bxs{width:100%;height:auto;aspect-ratio:1;border-width:1px;border-radius:50%}
+.t60 .slot{font-size:14px;line-height:1;overflow:hidden;color:var(--acc)}
+#gr.t60 .slot{border-radius:4px}
+.t60 .slot.on{border-color:transparent}
+.b60 .zb button{padding:10px 2px;font-size:.92rem;white-space:nowrap}.b60 .cen{font-size:2.3rem;margin:0 3px 3px 0}.b60 .top .num b{font-size:1.7rem}
+@media print{body{background:#fff}.app,.nop{display:none}.sheet{border:0;padding:0}}
+</style>
+</head>
+<body>
+<main>
+<p class="kick">Tema 1 · Material de apoyo</p>
+<h1>Cómo se forman los grupos</h1>
+<p class="nop">Elige una base y usa los botones de cada recuadro para añadir o quitar unidades sueltas, cajas o camiones. Cuando se llene la bandeja de unidades sueltas, se forma una caja. Cuando se llenen las cajas, se forma un camión. En la base 60 (el reloj), las unidades son segundos, minutos y horas.</p>
+
+<section class="app" aria-label="Contador de grupos">
+<div class="bases" id="bases">
+<button data-b="3" aria-pressed="false">Base 3</button>
+<button data-b="5" aria-pressed="true">Base 5</button>
+<button data-b="8" aria-pressed="false">Base 8</button>
+<button data-b="10" aria-pressed="false">Base 10</button>
+<button data-b="60" aria-pressed="false">Base 60</button>
+</div>
+<div class="top"><div class="num" aria-live="polite">Se escribe: <b id="num">0</b></div><p class="msg" id="msg" aria-live="polite"></p></div>
+<div class="board">
+<div class="zone" id="zc"><h3 id="tc"></h3><div class="zbody" id="ce"></div><div class="zb"><button id="cadd" class="pl"></button><button id="crem"></button></div></div>
+<div class="zone" id="zg"><h3 id="tg"></h3><div class="tray zbody" id="gr"></div><div class="zb"><button id="gadd" class="pl"></button><button id="grem"></button><button id="gadd10" class="x10" hidden></button></div></div>
+<div class="zone" id="zs"><h3 id="ts"></h3><div class="tray zbody" id="tray"></div><div class="zb"><button id="uadd" class="pl"></button><button id="urem"></button><button id="uadd10" class="x10" hidden></button></div></div>
+</div>
+<p class="leg" id="leg"></p>
+<p><button id="reset" class="rsb">Empezar de nuevo</button></p>
+</section>
+
+<h2>Para hacerlo en el cuaderno</h2>
+<p class="nop" id="shnote">Esta hoja cambia según la base que hayas elegido arriba. Imprime una por cada base. Se usa con fichas, garbanzos o tapones.</p>
+<div class="sheet" id="sheet"></div>
+</main>
+<script>
+var S={3:'\ud83c\udf4e',5:'\ud83c\udf4e',8:'\ud83c\udf4e',10:'\ud83c\udf4e',60:'\u2726'},C={3:'--b3',5:'--b5',8:'--b8',10:'--b10',60:'--b60'},BX='\ud83d\udce6',TK='\ud83d\ude9a';
+var B=5,n=0,busy=false,MAX=124;
+var $=function(i){return document.getElementById(i)};
+function bx(){return B==60?'\u23f3':BX}
+function tk(){return B==60?'\ud83d\udd50':TK}
+function N(){
+ if(B==60)return{c:['hora','horas'],g:['minuto','minutos'],u:['segundo','segundos'],T:['HORAS','MINUTOS','SEGUNDOS'],t:['Horas (relojes)','Minutos (relojes de arena)','Segundos (destellos)'],c1:'una hora',g1:'un minuto',uq:'un segundo',u1:'un segundo'};
+ return B==10?{c:['centena','centenas'],g:['decena','decenas'],u:['unidad','unidades'],T:['CENTENAS','DECENAS','UNIDADES'],t:['Centenas (camiones)','Decenas (cajas)','Unidades (la bandeja)'],c1:'una centena',g1:'una decena',uq:'una unidad',u1:'una'}:
+ {c:['cami\u00f3n','camiones'],g:['caja','cajas'],u:['unidad suelta','unidades sueltas'],T:['CAMIONES','CAJAS','UNIDADES SUELTAS'],t:['Camiones','Cajas','Unidades sueltas (la bandeja)'],c1:'un cami\u00f3n',g1:'una caja',uq:'una unidad',u1:'una'}}
+function sp(m){return{c:Math.floor(m/(B*B)),g:Math.floor(m/B)%B,u:m%B}}
+function words(o){var q=N(),t=[];
+ if(o.c)t.push(o.c+' '+q.c[o.c==1?0:1]);if(o.g)t.push(o.g+' '+q.g[o.g==1?0:1]);if(o.u)t.push(o.u+' '+q.u[o.u==1?0:1]);
+ return t.length>1?t.slice(0,-1).join(', ')+' y '+t[t.length-1]:(t[0]||'nada')}
+function ns(o){return o.c?''+o.c+o.g+o.u:(o.g?''+o.g+o.u:''+o.u)}
+function wr(o){if(B==60){var t=[];if(o.c)t.push(o.c+' h');if(o.g)t.push(o.g+' min');if(o.u||!t.length)t.push(o.u+' s');return t.join(' ')}
+ return ns(o)+(B==10?'':'<sub>('+B+')</sub>')}
+function slots(k,on,sym,big){var h='';for(var i=0;i<k;i++)h+='<div class="slot'+(big?' bxs':'')+(i<on?' on':'')+'">'+(i<on?sym:'')+'</div>';return h}
+function fullMsg(both){var q=N();
+ if(B==60)return both?'\u00a1Llegamos a 60 segundos y a 60 minutos! Cambiamos 60 segundos por 1 minuto y 60 minutos por 1 hora.':'\u00a1Llegamos a 60 segundos! Cambiamos los 60 segundos por 1 minuto.';
+ return both?'\u00a1Se llenan la bandeja y las '+q.g[1]+'! Cambiamos '+B+' '+q.u[1]+' por 1 '+q.g[0]+' y '+B+' '+q.g[1]+' por 1 '+q.c[0]+'.':'\u00a1La bandeja est\u00e1 llena! Cambiamos las '+B+' '+q.u[1]+' por 1 '+q.g[0]+'.'}
+function render(msg,fu,fg){
+ var o=sp(n),h='',i,s60=B==60;
+ for(i=0;i<o.c;i++)h+='<span class="cen">'+tk()+'</span>';
+ $('ce').innerHTML=h;
+ $('gr').className='tray zbody'+(s60?' t60':'');$('tray').className='tray zbody'+(s60?' t60':'');
+ $('gr').innerHTML=slots(B,fg?B:o.g,s60?'\u23f3':BX,!s60);
+ $('tray').innerHTML=slots(B,fu?B:o.u,S[B],false);
+ $('zs').className='zone'+(fu?' full':'');$('zg').className='zone'+(fg?' full':'');
+ $('num').innerHTML=(fu||fg)?'\u2026':wr(o);
+ $('msg').innerHTML=msg||(n>=MAX?(s60?'Llegamos a '+wr(o)+'. Con 24 horas se llena un d\u00eda y la regla cambia.':'Es el \u00faltimo n\u00famero que vemos aqu\u00ed ('+wr(o)+'). M\u00e1s all\u00e1 empiezan los millares.'):(n?'Tenemos '+words(o)+'.':'Empezamos sin nada.'));
+ var z=busy;$('uadd').disabled=z||n>=MAX;$('urem').disabled=z||n<=0;$('gadd').disabled=z||n+B>MAX;$('grem').disabled=z||n<B;$('cadd').disabled=z||n+B*B>MAX;$('crem').disabled=z||n<B*B;
+ $('uadd10').disabled=z||o.u>=B-1;$('gadd10').disabled=z||o.g>=B-1;
+}
+function setBase(b){B=b;MAX=b==60?24*3600-1:b*b*b-1;n=0;busy=false;var q=N();
+ document.documentElement.style.setProperty('--acc','var('+C[b]+')');
+ document.body.classList.toggle('b60',b==60);
+ [].forEach.call(document.querySelectorAll('#bases button'),function(x){x.setAttribute('aria-pressed',+x.dataset.b===b)});
+ $('tc').textContent=q.t[0];$('tg').textContent=q.t[1];$('ts').textContent=q.t[2];
+ $('leg').textContent=b==60?S[60]+' = 1 segundo. '+bx()+' = 1 minuto: 60 segundos. '+tk()+' = 1 hora: 60 minutos.':b==10?S[b]+' = 1 unidad. '+BX+' = 1 decena: 10 unidades. '+TK+' = 1 centena: 10 decenas.':S[b]+' = 1 unidad suelta. '+BX+' = 1 caja: '+b+' unidades sueltas. '+TK+' = 1 cami\u00f3n: '+b+' cajas.';
+ var L=b==60?['segundo','minuto','hora']:b==10?['unidad','decena','centena']:['unidad suelta','caja','cami\u00f3n'];
+ $('uadd').textContent='+ '+L[0];$('urem').textContent='\u2212 '+L[0];$('gadd').textContent='+ '+L[1];$('grem').textContent='\u2212 '+L[1];$('cadd').textContent='+ '+L[2];$('crem').textContent='\u2212 '+L[2];
+ $('uadd10').hidden=$('gadd10').hidden=b!=60;$('shnote').textContent='Esta hoja cambia seg\u00fan la base que hayas elegido arriba. Imprime una por cada base. '+(b==60?'En la base 60 no hacen falta fichas: se dibuja y se escribe.':'Se usa con fichas, garbanzos o tapones.');$('uadd10').textContent='+ 10 segundos';$('gadd10').textContent='+ 10 minutos';
+ render(b==60?'Base 60: el reloj. Un minuto lleva 60 segundos y una hora lleva 60 minutos. Aqu\u00ed las cifras se escriben separadas: 1 h 2 min 5 s.':b==10?'Base 10: el sistema de siempre. Las decenas llevan 10 unidades.':'Base '+b+': las cajas llevan '+b+' unidades sueltas.');sheet();}
+$('uadd').onclick=function(){
+ if(busy||n>=MAX)return;var o=sp(n);
+ if(o.u===B-1){var both=o.g===B-1;busy=true;
+  render(fullMsg(both),true,both);
+  setTimeout(function(){n++;busy=false;var p=sp(n);render('Hecho: ya tenemos '+words(p)+'. Se escribe '+wr(p)+'.');},2200);}
+ else{n++;render();}};
+$('gadd').onclick=function(){
+ if(busy||n+B>MAX)return;var o=sp(n),q=N();
+ if(o.g===B-1){busy=true;render(B==60?'\u00a1Llegamos a 60 minutos! Cambiamos los 60 minutos por 1 hora.':'\u00a1Se llenan las '+q.g[1]+'! Cambiamos '+B+' '+q.g[1]+' por 1 '+q.c[0]+'.',false,true);
+  setTimeout(function(){n+=B;busy=false;var p=sp(n);render('Hecho: ya tenemos '+words(p)+'. Se escribe '+wr(p)+'.');},2200);}
+ else{n+=B;render();}};
+$('cadd').onclick=function(){if(busy||n+B*B>MAX)return;n+=B*B;render();};
+$('uadd10').onclick=function(){if(busy)return;var a=Math.min(10,B-1-n%B);if(a>0){n+=a;render();}};
+$('gadd10').onclick=function(){if(busy)return;var a=Math.min(10,B-1-sp(n).g);if(a>0){n+=a*B;render();}};
+$('urem').onclick=function(){if(busy||n<=0)return;var q=N(),m=null;
+ if(n%B===0)m=n%(B*B)===0?'Deshacemos '+q.c1+': sus '+B+' '+q.g[1]+' vuelven al tablero, y quitamos '+q.uq+'.':'Deshacemos '+q.g1+': sus '+B+' '+q.u[1]+' vuelven a la bandeja, y quitamos '+q.u1+'.';
+ n--;render(m);};
+$('grem').onclick=function(){if(busy||n<B)return;var q=N(),o=sp(n);n-=B;
+ render(o.g===0?'Deshacemos '+q.c1+': sus '+B+' '+q.g[1]+' vuelven al tablero, y quitamos '+q.g1+'.':null);};
+$('crem').onclick=function(){if(busy||n<B*B)return;n-=B*B;render();};
+$('reset').onclick=function(){setBase(B)};
+[].forEach.call(document.querySelectorAll('#bases button'),function(x){x.onclick=function(){setBase(+x.dataset.b)}});
+function rg(k,f,c){var h='';for(var i=0;i<k;i++)h+='<span class="ring '+(c||'')+(i<f?' f':'')+'"></span>';return h}
+function sheet60(){return '<h3>Mi reloj \u00b7 Base 60 (grupos de 60)</h3>'+
+'<ol class="steps"><li>Cuenta los <b>SEGUNDOS \u2726</b>, de uno en uno, hasta llegar a 60.</li>'+
+'<li>Cuando lleguen a 60, c\u00e1mbialos por <b>1 minuto \u23f3</b> y empieza otra vez con los segundos.</li>'+
+'<li>Cuando tengas 60 minutos, c\u00e1mbialos por <b>1 hora \ud83d\udd50</b>.</li>'+
+'<li>Escribe tu tiempo separando las horas, los minutos y los segundos.</li></ol>'+
+'<div class="exm"><b>Ejemplo:</b> tengo 125 segundos. 60 + 60 = 120: son 2 minutos y me sobran 5 segundos. Escribo <b>2 min 5 s</b>.'+
+'<div class="rs" style="justify-content:flex-start"><span style="font-size:1.8rem">\u23f3\u23f3</span><span style="margin-left:14px;font-size:1.3rem;letter-spacing:.2em">\u2726\u2726\u2726\u2726\u2726</span></div></div>'+
+'<div class="mat"><div><h4>HORAS \ud83d\udd50</h4><p>1 reloj cuando se llenan 60 minutos</p></div>'+
+'<div><h4>MINUTOS \u23f3</h4><p>1 reloj de arena cuando se llenan 60 segundos</p></div>'+
+'<div><h4>SEGUNDOS \u2726</h4><p>Empieza aqu\u00ed, un destello cada vez</p></div></div>'+
+'<div class="mine"><b style="padding-bottom:20px">Mi tiempo:</b><span><i></i><small>horas</small></span><span><i></i><small>minutos</small></span><span><i></i><small>segundos</small></span></div>'}
+function sheet(){var b=B;if(b==60){$('sheet').innerHTML=sheet60();return}var q=N(),sub=b==10?'':'<sub>('+b+')</sub>',h='<h3>Mi tablero \u00b7 Base '+b+' (grupos de '+b+')</h3>'+
+'<ol class="steps"><li>Pon una ficha en cada c\u00edrculo de <b>'+q.T[2]+'</b>, de una en una.</li>'+
+'<li>Cuando se llenen los '+b+' c\u00edrculos, <b>quita todas las fichas</b> y pon <b>una sola</b> en <b>'+q.T[1]+'</b>.</li>'+
+'<li>Cuando se llenen los '+b+' c\u00edrculos de '+q.T[1]+', quita todas y pon <b>una sola</b> en <b>'+q.T[0]+'</b>.</li>'+
+'<li>Mira cu\u00e1ntas fichas hay en cada columna y escribe tu n\u00famero abajo.</li></ol>'+
+'<div class="exm"><b>Ejemplo:</b> tengo '+(b+2)+' fichas. '+b+' llenan la fila de '+q.T[2].toLowerCase()+', as\u00ed que las cambio por 1 en '+q.T[1]+'. Me quedan 2. Escribo <b>12'+sub+'</b>.'+
+'<div class="rs"><span><small>'+q.T[1]+'</small><br>'+rg(b,1,'s')+'</span><span style="margin-left:18px"><small>'+q.T[2]+'</small><br>'+rg(b,2,'s')+'</span></div></div>'+
+'<div class="mat"><div><h4>'+q.T[0]+' '+TK+'</h4><p>Va 1 ficha cuando se llenan las '+q.g[1]+'</p><div class="rs">'+rg(b)+'</div></div>'+
+'<div><h4>'+q.T[1]+' '+BX+'</h4><p>Va 1 ficha cuando se llenan las '+q.u[1]+'</p><div class="rs">'+rg(b)+'</div></div>'+
+'<div><h4>'+q.T[2]+' '+S[b]+'</h4><p>Empieza aqu\u00ed, de una en una</p><div class="rs">'+rg(b)+'</div></div></div>'+
+'<div class="mine"><b style="padding-bottom:20px">Mi n\u00famero:</b><span><i></i><small>'+q.c[1]+'</small></span><span><i></i><small>'+q.g[1]+'</small></span><span><i></i><small>'+q.u[1]+'</small></span>'+(b==10?'':'<span style="font-size:1.2rem;padding-bottom:20px">('+b+')</span>')+'</div>';
+ $('sheet').innerHTML=h;}
+setBase(5);
+</script>
+</body>
+</html>
